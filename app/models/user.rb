@@ -10,7 +10,9 @@ class User < ApplicationRecord
   has_many :items, through: :ownerships
   has_many :wants
   has_many :want_items, through: :wants, class_name: 'Item', source: :item
-  
+  has_many :haves
+  has_many :hafe_items, through: :haves, class_name: 'Item', source: :item
+
   def want(item)
     self.wants.find_or_create_by(item_id: item.id)
   end
@@ -22,5 +24,18 @@ class User < ApplicationRecord
 
   def want?(item)
     self.want_items.include?(item)
+  end
+
+  def hafe(item)
+    self.haves.find_or_create_by(item_id: item.id)
+  end
+
+  def unhafe(item)
+    hafe = self.haves.find_by(item_id: item.id)
+    hafe.destroy if hafe
+  end
+
+  def hafe?(item)
+    self.hafe_items.include?(item)
   end
 end
